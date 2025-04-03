@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Panel | Kings Of Fade</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="firebase-config.js"></script>
+    <script defer src="staff.js"></script>
+
+    <style>
+    /* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    font-size: 3.5em;
+    color: #1d3557;
+    margin-top: 50px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+h2 {
+    color: #1d3557;
+    font-size: 2.2em;
+    text-align: center;
+    margin-top: 40px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Header Styling (Salon Name) */
+.salon-name {
+    color: #f1faee;
+    background-color: #1d3557;
+    padding: 15px;
+    text-align: center;
+    font-size: 2.8em;
+    font-weight: bold;
+    border-radius: 15px;
+    margin-top: 20px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Section Container (For sections like Queue and Revenue) */
+.section-container {
+    margin: 40px auto;
+    padding: 25px;
+    background-color: #fff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    max-width: 900px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.section-container:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Queue Display Styling */
+#staffQueue {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1.1em;
+    color: #1d3557;
+    font-weight: 600;
+}
+
+/* Total Revenue Section Styling */
+#totalRevenue {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #457b9d;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Button Styling */
+button {
+    background-color: #1d3557;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1.4em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    display: block;
+    margin: 10px auto;
+}
+
+button:hover {
+    background-color: #457b9d;
+    transform: translateY(-2px);
+}
+
+button:focus {
+    outline: none;
+}
+
+/* Amount Received Text Field Styling */
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.2em;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="number"]:focus {
+    border-color: #457b9d;
+    box-shadow: 0 0 8px rgba(69, 123, 157, 0.3);
+    outline: none;
+}
+
+input[type="number"]::placeholder {
+    color: #aaa;
+}
+
+/* Responsive Design for Small Screens */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2.4em;
+    }
+
+    h2 {
+        font-size: 1.6em;
+    }
+
+    .section-container {
+        padding: 20px;
+        width: 90%;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .salon-name {
+        font-size: 2.5em;
+    }
+}
+
+/* Animation for Page Load */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+body {
+    animation: fadeIn 1s ease-out;
+}
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Salon Name Section -->
+    <div class="salon-name">
+        Kings Of Fade
+    </div>
+
+    <h1>Salon Queue - Staff View</h1>
+
+    <!-- Current Queue Section -->
+    <div class="section-container">
+        <h2>Current Queue</h2>
+        <div id="staffQueue"></div>
+    </div>
+
+ 
+
+</body>
+
+</html>

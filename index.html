@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salon Queue | Kings Of Fade</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="firebase-config.js"></script>
+    <script defer src="app.js"></script>
+
+    <style>
+      /* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    font-size: 3.5em;
+    color: #1d3557;
+    margin-top: 50px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+h2 {
+    color: #1d3557;
+    font-size: 2em;
+    text-align: center;
+    margin-top: 40px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Header Styling (Salon Name) */
+.salon-name {
+    color: #f1faee;
+    background-color: #1d3557;
+    padding: 15px;
+    text-align: center;
+    font-size: 2.8em;
+    font-weight: bold;
+    border-radius: 15px;
+    margin-top: 20px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 550px;
+    margin: 30px auto;
+    padding: 25px;
+    background-color: #fff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+form:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+input[type="text"],
+input[type="tel"] {
+    width: 85%;
+    padding: 12px;
+    margin: 12px 0;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1.1em;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="tel"]:focus {
+    border-color: #457b9d;
+    outline: none;
+}
+
+button {
+    background-color: #1d3557;
+    color: #fff;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-size: 1.3em;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover {
+    background-color: #457b9d;
+    transform: translateY(-2px);
+}
+
+/* Queue Status Styling */
+#queueStatus {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    font-size: 1.1em;
+    text-align: center;
+    color: #1d3557;
+    transition: background-color 0.3s ease;
+}
+
+#queueStatus:hover {
+    background-color: #f1f1f1;
+}
+
+/* Input Field Focus Styling */
+input[type="text"]:focus,
+input[type="tel"]:focus {
+    border-color: #1d3557;
+}
+
+/* Button Focus Styling */
+button:focus {
+    outline: none;
+}
+
+/* Remove Client Form Styling */
+#removeForm {
+    margin-top: 50px;
+}
+
+#removeForm input {
+    margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2.2em;
+    }
+
+    form {
+        padding: 20px;
+        width: 90%;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .salon-name {
+        font-size: 2.4em;
+    }
+
+    h2 {
+        font-size: 1.8em;
+    }
+}
+
+/* Animation on Page Load */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+body {
+    animation: fadeIn 1s ease-out;
+}
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Salon Name Section -->
+    <div class="salon-name">
+        Kings Of Fade
+    </div>
+
+    <h1>Salon Queue System</h1>
+
+    <!-- Queue Join Form -->
+    <form id="queueForm">
+        <input type="text" id="clientName" placeholder="Your Name" required>
+        <input type="tel" id="clientPhone" placeholder="Phone Number" required>
+        <input type="tel" id="barber" placeholder="Preferred Barber">
+        <input type="text" id="clientId" placeholder="Enter Unique ID" required>
+        <button type="button" id="joinQueueBtn">Join Queue</button>
+    </form>
+
+    <h2>Current Queue</h2>
+    <div id="queueStatus"></div>
+
+    <h2>Remove Yourself from Queue</h2>
+    <form id="removeForm">
+        <input type="text" id="removeClientId" placeholder="Enter Your Unique ID to Remove" required>
+        <button type="button" id="removeQueueBtn">Remove from Queue</button>
+    </form>
+
+</body>
+
+</html>

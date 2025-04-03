@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Served Clients | Kings Of Fade</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #1d3557;
+            margin-top: 50px;
+            font-weight: bold;
+        }
+
+        h3 {
+            color: #1d3557;
+            text-align: center;
+            font-size: 1.8em;
+        }
+
+        /* Table Styling */
+        table {
+            width: 80%;
+            margin: 30px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #1d3557;
+            color: #fff;
+            font-size: 1.1em;
+        }
+
+        td {
+            background-color: #fafafa;
+        }
+
+        tr:hover td {
+            background-color: #f1faee;
+        }
+
+        /* Button Styling */
+        button {
+            background-color: #1d3557;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            margin: 20px auto;
+        }
+
+        button:hover {
+            background-color: #457b9d;
+        }
+
+        /* Link Styling */
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #1d3557;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f1faee;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #1d3557;
+            color: #fff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 800px) {
+            table {
+                width: 95%;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h3 {
+                font-size: 1.5em;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Salon Name Section -->
+    <h1>Served Clients - Kings Of Fade</h1>
+
+    <!-- Transactions Table Section -->
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Barber</th>
+                <th>Amount Paid</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="transactionsTable"></tbody>
+    </table>
+
+    <!-- Display Total Amount Section -->
+    <h3>Total Amount: <span id="totalAmount">R0.00</span></h3>
+
+    <!-- Back to Staff View Link -->
+    <a href="staff.html">Back to Staff View</a>
+
+    <!-- Download Button -->
+    <button onclick="exportToCSV()">Download Transactions</button>
+
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6qaJk0Eb8jtSNUynKYGPSjfiPj2Mwf9o",
+            authDomain: "queieing.firebaseapp.com",
+            databaseURL: "https://queieing-default-rtdb.firebaseio.com",
+            projectId: "queieing",
+            storageBucket: "queieing.appspot.com",
+            messagingSenderId: "257619042814",
+            appId: "1:257619042814:web:7fa6bb5324b1c3b47720af"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        } else {
+            firebase.app(); // Use the default app if already initialized
+        }
+
+        const db = firebase.database();
+        const transactionsRef = db.ref('transactions');
+
+        // Fetch the transaction data and populate the table
+        transactionsRef.on('value', (snapshot) => {
+            const transactionsTable = document.getElementById('transactionsTable');
+            const totalAmountElement = document.getElementById('totalAmount');
+            let totalAmount = 0;
+
+            transactionsTable.innerHTML = "";  // Clear the table body
+
+            if (snapshot.exists()) {
+                snapshot.forEach(childSnapshot => {
+                    const data = childSnapshot.val();
+                    const amount = Number(data.amount);
+                    const barber = data.barber || "Any barber";  // Default to "Any barber" if barber is empty
+
+                    if (!isNaN(amount)) {
+                        totalAmount += amount;  // Add the amount to the total
+                    }
+
+                    transactionsTable.innerHTML += `
+                        <tr>
+                            <td>${data.name}</td>
+                            <td>${data.phone}</td>
+                            <td>${barber}</td>
+                            <td>R${amount.toFixed(2)}</td>
+                            <td>${data.date}</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                transactionsTable.innerHTML = "<tr><td colspan='5'>No transactions found</td></tr>";
+            }
+
+            totalAmountElement.innerText = `R${totalAmount.toFixed(2)}`;
+        });
+
+        // Function to export the transactions to a CSV file
+        function exportToCSV() {
+            transactionsRef.once('value').then(snapshot => {
+                let csvContent = "data:text/csv;charset=utf-8,Name,Phone,Barber,Amount,Date\n";
+
+                snapshot.forEach(childSnapshot => {
+                    const data = childSnapshot.val();
+                    const amount = Number(data.amount); // Convert to number
+                    const barber = data.barber || "Any barber"; // Default to "Any barber" if barber is empty
+
+                    if (!isNaN(amount)) {
+                        csvContent += `${data.name},${data.phone},${barber},${amount.toFixed(2)},${data.date}\n`;
+                    }
+                });
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "transactions.csv");
+                document.body.appendChild(link);
+                link.click();
+            }).catch(err => console.error('Error exporting transactions:', err));
+        }
+
+    </script>
+</body>
+
+</html>
